@@ -4,11 +4,12 @@ Group Matching API for the [Support Network](https://www.umichwsn.org).
 
 For deployment as a Google Cloud Function.
 
----
+
 
 ## The Support Network
 
 The Support Network was founded in 2014 at the University of Michigan to improve student mental health and well-being through the implementation, development, and collaboration of peer support initiatives. Over the past 5 years, thousands of students have found supportive communities through the program, and today, there are growing chapters at several other schools across the country (high schools and colleges).
+
 
 
 ### Weekly Group Matching
