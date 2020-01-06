@@ -58,5 +58,4 @@ def room_data_from_csv(csv_file):
     df = df.replace(indexed_value_map)
 
     R_id, Rt, Rl, Rg = df.to_numpy().T
-
-    return R_id, Rt, Rl, Rg
+    return df, (Rt, Rl, Rg)

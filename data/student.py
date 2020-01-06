@@ -92,9 +92,9 @@ def student_data_from_csv(csv_file):
     df = df.apply(_split_times, axis=1)
 
     # Summarize dataframe
-    LOG.debug(f"Gender breakdown:\n{str(df.gender.value_counts())}")
-    LOG.debug(f"Grad standings breakdown:\n{str(df.grad_standing.value_counts())}")
-    LOG.debug(f"Campus breakdown:\n{str(df.campus.value_counts())}")
+    LOG.debug(f"\nGender breakdown:\n{str(df.gender.value_counts())}")
+    LOG.debug(f"\nGrad standings breakdown:\n{str(df.grad_standing.value_counts())}")
+    LOG.debug(f"\nCampus breakdown:\n{str(df.campus.value_counts())}")
 
     # Extract data to return along with dataframe
     At = df[[f"t_{ix}" for ix in range(20)]].to_numpy()
@@ -108,4 +108,4 @@ def student_data_from_csv(csv_file):
 
     Xg = pd.get_dummies(df.gender, dummy_na=True).to_numpy()
 
-    return df, At, Al, Ag, Xg
+    return df, (At, Al, Ag), (Xg)

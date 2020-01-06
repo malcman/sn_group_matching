@@ -21,11 +21,11 @@ def create_groups(request):
     if request.form.get("user") != "michigan_spring_2019_dev":
         return jsonify()
 
-    student_data = student_data_from_csv(responses_csv_file)
-    room_data = room_data_from_csv(rooms_csv_file)
+    sdf, A, X = student_data_from_csv(responses_csv_file)
+    rdf, R = room_data_from_csv(rooms_csv_file)
 
     # Optimize
-    results = place_students(student_data, room_data)
+    groups = place_students(A, X, R)
 
     # Format output
     output = output_from_results(results)
