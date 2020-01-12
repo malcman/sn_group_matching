@@ -1,3 +1,13 @@
+"""
+data.student
+------------
+Loads the survey data from the signed up students and prepares it for the
+optimization program.
+
+TODO: Move to Google Sheets integration in favor of Qualtrics / CSV uploads.
+
+"""
+
 import logging
 import re
 
@@ -53,6 +63,14 @@ def _split_times(row):
 
 
 def student_data_from_csv(csv_file):
+    """
+    Loads, validates, cleans, and transforms the room data to prepare it for the
+    optimization program.
+
+    Also logs informational summary messages about the characteristics of the
+    participant pool.
+
+    """
     raw_df = pd.read_csv(csv_file)
     if not set(COLUMN_MAP.keys()).issubset(set(raw_df.columns)):
         raise ValueError("Provided column mapping for survey data csv did not match")
@@ -90,14 +108,17 @@ def student_data_from_csv(csv_file):
 
     # Encode time slots
     df = df.apply(_split_times, axis=1)
+    # hack in the half-hour slots, NOTE: temporary
+    df["t_20"] = ((df["t_0"] == 1) & (df["t_1"] == 1)).astype(int)  # M 4:30
+    df["t_21"] = ((df["t_3"] == 1) & (df["t_4"] == 1)).astype(int)  # M 7:30
 
     # Summarize dataframe
-    LOG.debug(f"\nGender breakdown:\n{str(df.gender.value_counts())}")
-    LOG.debug(f"\nGrad standings breakdown:\n{str(df.grad_standing.value_counts())}")
-    LOG.debug(f"\nCampus breakdown:\n{str(df.campus.value_counts())}")
+    LOG.debug(f"\n\nGender breakdown:\n{str(df.gender.value_counts())}\n")
+    LOG.debug(f"\n\nGraduation standings:\n{str(df.grad_standing.value_counts())}\n")
+    LOG.debug(f"\n\nCampus breakdown:\n{str(df.campus.value_counts())}\n")
 
     # Extract data to return along with dataframe
-    At = df[[f"t_{ix}" for ix in range(20)]].to_numpy()
+    At = df[[f"t_{ix}" for ix in range(22)]].to_numpy()
 
     campus_ohe_df = pd.get_dummies(df.campus)
     campus_ohe_df.loc[df[df.campus.str.contains(",")].index, :2] = 1

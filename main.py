@@ -1,15 +1,33 @@
+"""
+main
+----
+The entry-point to the group matching API.
+
+TODO:
+- Generalize to multiple possible data sources
+- Actual authentication
+
+"""
+
 import os
 
 from flask import jsonify
 
-from data.group import output_from_results
+from data.group import output_dict_from_results
 from data.student import student_data_from_csv
 from data.room import room_data_from_csv
 from optimization.match import place_students
 
 
 def create_groups(request):
-    # Import the data
+    """
+    Creates a set of weekly meeting groups, given student sign-up data.
+
+    Loads CSV data into numpy arrays, runs a Pyomo mixed-integer program, and
+    formats the output into a JSON-like response.
+
+    """
+    # Import data
     responses_csv_file = request.files.get("responses_csv_file")
     rooms_csv_file = request.files.get("rooms_csv_file")
 
@@ -25,12 +43,12 @@ def create_groups(request):
     rdf, R = room_data_from_csv(rooms_csv_file)
 
     # Optimize
-    groups = place_students(A, X, R)
+    group_dict = place_students(A, X, R)
 
     # Format output
-    output = output_from_results(results)
+    output_dict = output_dict_from_results(group_dict, sdf, rdf)
 
-    return jsonify({"results": output})
+    return jsonify(output_dict)
 
 
 def health_check(request):

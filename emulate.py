@@ -1,3 +1,12 @@
+"""
+emulate
+-------
+A script to serve the API from a local Flask server.
+
+For development purposes only; do not use in production.
+
+"""
+
 import os
 
 from flask import Flask, request
@@ -47,5 +56,5 @@ if __name__ == "__main__":
         host=os.environ["HOST"],
         port=os.environ["PORT"],
         # options forwarded to Werkzeug server
-        threaded=True,
+        threaded=False,
     )

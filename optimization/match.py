@@ -1,3 +1,16 @@
+"""
+optimization.match
+------------------
+Mixed-integer program formulation of this group matching problem.
+
+TODO:
+- More general formulation for other chapters' requirements
+- Support "mix features" on top of "split features"
+    - do not allow mixing of groups by split features (e.g. time, campus)
+    - prefer more diverse groups by mix features (e.g. gender, graduation year)
+
+"""
+
 import logging
 from timeit import default_timer as timer
 
@@ -6,11 +19,9 @@ import pyomo.environ as pyo
 
 LOG = logging.getLogger(__name__)
 
-# Constants
-
 # The minimum and maximum size of the groups.
-G_MIN = 10
-G_MAX = 18
+G_MIN = 6
+G_MAX = 16
 
 # The minimum number of non-female-identifying students for each group.
 # Female-identifying students are the vast majority of participants, so this
@@ -20,6 +31,23 @@ G_MAX = 18
 
 
 def place_students(A, X, R):
+    """
+    Place the given students into groups by solving a MIP optimization.
+
+    A, student features
+        At, time
+        Al, location (campus)
+        Ag, graduation standing
+
+    X, student mixing features (unused)
+        Xg, gender
+
+    R, room features
+        At, time
+        Al, location (campus)
+        Ag, graduation standing
+
+    """
     At, Al, Ag = A
     Xg = X
     Rt, Rl, Rg = R
@@ -109,7 +137,7 @@ def place_students(A, X, R):
 
     # Solve
 
-    opt = pyo.SolverFactory("glpk")
+    opt = pyo.SolverFactory("cplex")
 
     LOG.info(f"Solving model ({model.nvariables()} variables)...")
 
@@ -131,6 +159,5 @@ def place_students(A, X, R):
     placements = [k for k, v in s_output.items() if v == 1]
     group_ids = [k for k, v in g_output.items() if v == 1]
 
-    groups = {g_id: [x for x, y in placements if y == g_id] for g_id in group_ids}
-
-    return groups
+    group_dict = {g_id: [x for x, y in placements if y == g_id] for g_id in group_ids}
+    return group_dict
