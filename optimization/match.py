@@ -137,7 +137,7 @@ def place_students(A, X, R):
 
     # Solve
 
-    opt = pyo.SolverFactory("cplex")
+    opt = pyo.SolverFactory("cbc")
 
     LOG.info(f"Solving model ({model.nvariables()} variables)...")
 
