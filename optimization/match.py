@@ -16,6 +16,8 @@ from timeit import default_timer as timer
 
 import pyomo.environ as pyo
 
+import pyutilib.subprocess.GlobalData
+pyutilib.subprocess.GlobalData.DEFINE_SIGNAL_HANDLERS_DEFAULT = False
 
 LOG = logging.getLogger(__name__)
 

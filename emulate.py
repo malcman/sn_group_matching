@@ -9,7 +9,8 @@ For development purposes only; do not use in production.
 
 import os
 
-from flask import Flask, request
+from flask import Flask, request, make_response
+from flask_cors import CORS
 import yaml
 
 from main import health_check, create_groups
@@ -38,6 +39,7 @@ def load_env_variables(env_file_path):
 # Define application and routes
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/health-check")

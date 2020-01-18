@@ -7,6 +7,7 @@ format compatible with the caller.
 """
 
 from .room import VALUE_MAP as ROOM_VALUE_MAP
+import pandas as pd
 
 VALUE_MAP = {
     "campus": {0: "Central", 1: "North",},
@@ -74,7 +75,7 @@ def output_dict_from_results(group_dict, sdf, rdf):
 
     # Return JSON-like results
     return {
-        "placed": placed.to_dict(orient="records"),
-        "unplaced": unplaced.to_dict(orient="records"),
+        "placed": placed.where((pd.notnull(placed)), None).to_dict(orient="records"),
+        "unplaced": unplaced.where((pd.notnull(unplaced)), None).to_dict(orient="records"),
         "groups": groups.to_dict(orient="records"),
     }
