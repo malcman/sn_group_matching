@@ -9,7 +9,7 @@ For development purposes only; do not use in production.
 
 import os
 
-from flask import Flask, request, make_response
+from flask import Flask, request
 from flask_cors import CORS
 import yaml
 
